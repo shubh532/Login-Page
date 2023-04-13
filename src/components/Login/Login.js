@@ -1,40 +1,52 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import Card from '../UI/Card/Card';
-import classes from './Login.module.css';
-import Button from '../UI/Button/Button';
+import Card from "../UI/Card/Card";
+import classes from "./Login.module.css";
+import Button from "../UI/Button/Button";
 
 const Login = (props) => {
-  const [enteredEmail, setEnteredEmail] = useState('');
+  const [enteredEmail, setEnteredEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = useState();
-  const [enterClgName,setclgName]=useState("")
-  const [enteredPassword, setEnteredPassword] = useState('');
+  const [enterClgName, setclgName] = useState("");
+  const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
-  const [validClg,setClgIsValid]=useState()
+  const [validClg, setClgIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-  useEffect(()=>{setFormIsValid(
-    enteredEmail.includes('@') && enteredPassword.trim().length > 6 && enterClgName.trim().length > 0)
-  },[enteredEmail,enteredPassword,enterClgName])
+  useEffect(() => {
+    const timeOut=setTimeout(()=>{
+      console.log("Somthing happend when use effect execute it repeatedly ececute as event ocuurs in input ...!")
+      setFormIsValid(
+        enteredEmail.includes("@") &&
+          enteredPassword.trim().length > 6 &&
+          enterClgName.trim().length > 0
+      );
+    }, 500)
+
+    return()=>{
+      clearTimeout(timeOut)
+      console.log("clean unwanted task in useEffect")
+    }
+  }, [enteredEmail, enteredPassword, enterClgName]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
   };
 
-  const clgName=(event)=>{
-    setclgName(event.target.value)
-  }
+  const clgName = (event) => {
+    setclgName(event.target.value);
+  };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
   };
 
   const validateEmailHandler = () => {
-    setEmailIsValid(enteredEmail.includes('@'));
+    setEmailIsValid(enteredEmail.includes("@"));
   };
-  const CheckClgName=()=>{
-    setClgIsValid(enterClgName.trim().length>0)
-  }
+  const CheckClgName = () => {
+    setClgIsValid(enterClgName.trim().length > 0);
+  };
 
   const validatePasswordHandler = () => {
     setPasswordIsValid(enteredPassword.trim().length > 6);
@@ -42,7 +54,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword,enterClgName);
+    props.onLogin(enteredEmail, enteredPassword, enterClgName);
   };
 
   return (
@@ -50,7 +62,7 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.invalid : ''
+            emailIsValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
@@ -64,7 +76,7 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            validClg === false ? classes.invalid : ''
+            validClg === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="collegeName">College Name</label>
@@ -78,7 +90,7 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            passwordIsValid === false ? classes.invalid : ''
+            passwordIsValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
