@@ -1,86 +1,97 @@
-import React, { useState, useEffect, useReducer } from "react";
-
+import React, { useState, useEffect, useReducer, useContext } from "react";
+import AuthContext from "../../ContextAPI/contextAPI";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 
-const emailReducer=(state,action)=>{
-  if(action.type==="USER_INPUT"){
-    return{value:action.value, IsValid:action.value.includes("@")}
+const emailReducer = (state, action) => {
+  if (action.type === "USER_INPUT") {
+    return { value: action.value, IsValid: action.value.includes("@") };
   }
-  if (action.type==="INPUT_USER"){
-    return{value:state.value, IsValid:state.value.includes("@")}
+  if (action.type === "INPUT_USER") {
+    return { value: state.value, IsValid: state.value.includes("@") };
   }
-  return {value:"",IsValid:false}
-}
-const passwordReducer=(state,action)=>{
-  if(action.type==="USER_INPUT"){
-    return{value:action.value, IsValid:action.value.trim().length > 6}
+  return { value: "", IsValid: false };
+};
+const passwordReducer = (state, action) => {
+  if (action.type === "USER_INPUT") {
+    return { value: action.value, IsValid: action.value.trim().length > 6 };
   }
-  if (action.type==="INPUT_USER"){
-    return{value:state.value, IsValid:state.value.trim().length > 6}
+  if (action.type === "INPUT_USER") {
+    return { value: state.value, IsValid: state.value.trim().length > 6 };
   }
-  return {value:"",IsValid:false}
-}
+  return { value: "", IsValid: false };
+};
 
-const clgReducer=(state,action)=>{
-  if(action.type==="USER_INPUT"){
-    return{value:action.value, IsValid:action.value.trim().length > 0}
+const clgReducer = (state, action) => {
+  if (action.type === "USER_INPUT") {
+    return { value: action.value, IsValid: action.value.trim().length > 0 };
   }
-  if (action.type==="INPUT_USER"){
-    return{value:state.value, IsValid:state.value.trim().length > 0}
+  if (action.type === "INPUT_USER") {
+    return { value: state.value, IsValid: state.value.trim().length > 0 };
   }
-  return {value:"",IsValid:false}
-}
-const Login = (props) => {
+  return { value: "", IsValid: false };
+};
+const Login = () => {
+  const AuthCtx=useContext(AuthContext)
+
   const [formIsValid, setFormIsValid] = useState(false);
 
-  const [emailState, dispatchEmail]=useReducer(emailReducer,{value:"",IsValid:null})
-  const [clgState,dispatchClg]=useReducer(clgReducer,{value:"",IsValid:null})
-  const [PassWordState, dispatchPass]=useReducer(passwordReducer,{value:"",IsValid:null})
+  const [emailState, dispatchEmail] = useReducer(emailReducer, {
+    value: "",
+    IsValid: null,
+  });
+  const [clgState, dispatchClg] = useReducer(clgReducer, {
+    value: "",
+    IsValid: null,
+  });
+  const [PassWordState, dispatchPass] = useReducer(passwordReducer, {
+    value: "",
+    IsValid: null,
+  });
 
   useEffect(() => {
-    const timeOut=setTimeout(()=>{
-      console.log("Somthing happend when use effect execute it repeatedly ececute as event ocuurs in input ...!")
-      setFormIsValid(
-        emailState.IsValid &&
-          PassWordState.IsValid &&
-          clgState.IsValid
+    const timeOut = setTimeout(() => {
+      console.log(
+        "Somthing happend when use effect execute it repeatedly ececute as event ocuurs in input ...!"
       );
-    }, 500)
+      setFormIsValid(
+        emailState.IsValid && PassWordState.IsValid && clgState.IsValid
+      );
+    }, 500);
 
-    return()=>{
-      clearTimeout(timeOut)
-      console.log("clean unwanted task in useEffect")
-    }
+    return () => {
+      clearTimeout(timeOut);
+      console.log("clean unwanted task in useEffect");
+    };
   }, [emailState, PassWordState, clgState]);
 
   const emailChangeHandler = (event) => {
-    dispatchEmail({type:"USER_INPUT",value:event.target.value});
+    dispatchEmail({ type: "USER_INPUT", value: event.target.value });
   };
 
   const clgName = (event) => {
-    dispatchClg({type:"USER_INPUT",value:event.target.value});
+    dispatchClg({ type: "USER_INPUT", value: event.target.value });
   };
 
   const passwordChangeHandler = (event) => {
-    dispatchPass({type:"USER_INPUT",value:event.target.value});
+    dispatchPass({ type: "USER_INPUT", value: event.target.value });
   };
 
   const validateEmailHandler = () => {
-    dispatchEmail({type:"INPUT_USER"});
+    dispatchEmail({ type: "INPUT_USER" });
   };
   const CheckClgName = () => {
-    dispatchClg({type:"INPUT_USER"});
+    dispatchClg({ type: "INPUT_USER" });
   };
 
   const validatePasswordHandler = () => {
-    dispatchEmail({type:"INPUT_USER"});
+    dispatchEmail({ type: "INPUT_USER" });
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, PassWordState.value, clgState.value);
+    AuthCtx.onLogIn(emailState.value, PassWordState.value, clgState.value);
   };
 
   return (
